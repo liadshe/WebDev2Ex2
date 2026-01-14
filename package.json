@@ -4,7 +4,7 @@
   "description": "Web Development course repo excercise 1",
   "main": "index.js",
   "scripts": {
-    "start": "tsc && node --env-file=.env.dev ./dist/src/server.js",
+    "start": "tsc && node --env-file=.env.dev ./dist/server.js",
     "dev": "nodemon ./src/server.ts",
     "test": "tsc && jest --detectOpenHandles --forceExit --runInBand",
     "testPost": "tsc && jest --detectOpenHandles --forceExit --runInBand ./src/tests/posts.test.ts",
@@ -22,6 +22,7 @@
   },
   "homepage": "https://github.com/nunusha712/WebDev2Ex1#readme",
   "dependencies": {
+    "dotenv": "^17.2.3",
     "express": "^5.2.1",
     "mongoose": "^8.19.4"
   },
