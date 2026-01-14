@@ -1,5 +1,8 @@
 import express, { Express } from "express";
 import mongoose from "mongoose";
+import swaggerUi from "swagger-ui-express";
+import swaggerSpec from "./swagger";
+
 import postRoute from "./routes/postRoute";
 import commentRoute from "./routes/commentRoute";
 import authRoute from "./routes/authRoute";
@@ -14,7 +17,7 @@ app.use("/post", postRoute);
 app.use("/comment", commentRoute);
 app.use("/auth", authRoute);
 app.use("/user", userRoute);
-
+app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerSpec));
 
 const initApp = () => {
   const pr = new Promise<Express>((resolve, reject) => {
