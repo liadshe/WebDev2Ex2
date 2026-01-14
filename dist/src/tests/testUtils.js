@@ -18,13 +18,13 @@ const userModel_1 = __importDefault(require("../models/userModel"));
 exports.userData = { email: "test@example.com", password: "testpassword" };
 exports.postData = [
     {
-        title: "post1", content: 2025, sender: "sender1",
+        title: "post1", content: "hello post1",
     },
     {
-        title: "post2", content: 2024, sender: "sender2",
+        title: "post2", content: "hello post2",
     },
     {
-        title: "post3", content: 2023, sender: "sender3",
+        title: "post3", content: "hello post3",
     }
 ];
 exports.commentData = [

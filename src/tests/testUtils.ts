@@ -14,20 +14,21 @@ export const userData:user = {email: "test@example.com", password: "testpassword
 
 type post = {
     title: string;
-    content: number;
-    sender: string;
+    content: string;
+    createdBy?: string;
+    comments?: string[];
     _id?: string;
 };
 
 export const postData:post[] = [
     {
-        title: "post1", content: 2025, sender: "sender1",
+        title: "post1", content: "hello post1",
     },
     {
-        title: "post2", content: 2024, sender: "sender2",
+        title: "post2", content: "hello post2",
     },
     {
-        title: "post3", content: 2023, sender: "sender3",
+        title: "post3", content: "hello post3",
     }
 ];
 
