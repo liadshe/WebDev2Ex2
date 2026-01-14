@@ -125,6 +125,26 @@ describe('Auth API', () => {
   expect(reusedNew.status).toBe(401);
 });
 
+test("Logout invalidates refresh token", async () => {
+    // create a fresh user just for this test
+
+    const refreshToken = userData.refreshToken;
+  
+    // logout
+    const logout = await request(app)
+      .post("/auth/logout")
+      .send({ refreshToken });
+  
+    expect(logout.status).toBe(200);
+    // try to use the refresh token after logout
+    const refreshAttempt = await request(app)
+      .post("/auth/refresh-token")
+      .send({ refreshToken });
+  
+    expect(refreshAttempt.status).toBe(401);
+  });
+
+
 
 
 });
