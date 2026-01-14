@@ -33,20 +33,20 @@ export const postData:post[] = [
 ];
 
 type comment = {
-    postId: string;
-    sender: string;
+    postId?: string;
+    createdBy?: string;
     message: string;
     _id?: string;
 };
 export const commentData:comment[] = [
     {
-        postId: "1111", message: "comment1", sender: "sender1",
+        message: "comment1", 
     },
     {
-        postId: "2222", message: "comment2", sender: "sender2",
+        message: "comment2", 
     },
     {
-        postId: "3333", message: "comment3", sender: "sender3",
+        message: "comment3", 
     }
 ];
 

@@ -8,7 +8,7 @@
     "dev": "nodemon ./src/server.ts",
     "test": "tsc && jest --detectOpenHandles --forceExit --runInBand",
     "testPost": "tsc && jest --detectOpenHandles --forceExit --runInBand ./src/tests/post.test.ts",
-    "testComment": "tsc && jest --detectOpenHandles --forceExit --runInBand ./src/tests/comments.test.ts",
+    "testComment": "tsc && jest --detectOpenHandles --forceExit --runInBand ./src/tests/comment.test.ts",
     "testauth": "tsc && jest --detectOpenHandles --forceExit --runInBand ./src/tests/auth.test.ts"
   },
   "repository": {
