@@ -69,11 +69,23 @@ describe('Posts API', () => {
     }));
     // delete post by id   
     test('DELETE post by ID', () => __awaiter(void 0, void 0, void 0, function* () {
+        // add comment to post to test cascade delete
+        const commentResponse = yield (0, supertest_1.default)(app)
+            .post('/post/' + testUtils_1.postData[0]._id + '/comment')
+            .set("Authorization", "Bearer " + testUtils_1.userData.token)
+            .send({ message: "Comment to be deleted with post" });
+        expect(commentResponse.statusCode).toBe(201);
+        expect(commentResponse.body.message).toBe("Comment to be deleted with post");
+        expect(commentResponse.body.postId).toBe(testUtils_1.postData[0]._id);
+        expect(commentResponse.body.createdBy).toBeDefined();
+        // delete post
         const response = yield (0, supertest_1.default)(app)
             .delete('/post/' + testUtils_1.postData[0]._id).set("Authorization", `Bearer ${testUtils_1.userData.token}`);
         expect(response.statusCode).toBe(200);
         const getResponse = yield (0, supertest_1.default)(app).get('/post/' + testUtils_1.postData[0]._id);
         expect(getResponse.statusCode).toBe(404);
+        const commentGetResponse = yield (0, supertest_1.default)(app).get('/comment/' + commentResponse.body._id);
+        expect(commentGetResponse.statusCode).toBe(404);
     }));
 });
 //# sourceMappingURL=post.test.js.map
