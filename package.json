@@ -9,7 +9,8 @@
     "test": "tsc && jest --detectOpenHandles --forceExit --runInBand",
     "testPost": "tsc && jest --detectOpenHandles --forceExit --runInBand ./src/tests/post.test.ts",
     "testComment": "tsc && jest --detectOpenHandles --forceExit --runInBand ./src/tests/comment.test.ts",
-    "testauth": "tsc && jest --detectOpenHandles --forceExit --runInBand ./src/tests/auth.test.ts"
+    "testauth": "tsc && jest --detectOpenHandles --forceExit --runInBand ./src/tests/auth.test.ts",
+    "testuser": "tsc && jest --detectOpenHandles --forceExit --runInBand ./src/tests/user.test.ts"
   },
   "repository": {
     "type": "git",

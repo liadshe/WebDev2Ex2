@@ -8,6 +8,7 @@ const mongoose_1 = __importDefault(require("mongoose"));
 const postRoute_1 = __importDefault(require("./routes/postRoute"));
 const commentRoute_1 = __importDefault(require("./routes/commentRoute"));
 const authRoute_1 = __importDefault(require("./routes/authRoute"));
+const userRoute_1 = __importDefault(require("./routes/userRoute"));
 const dotenv_1 = __importDefault(require("dotenv"));
 dotenv_1.default.config({ path: '.env.dev' });
 const app = (0, express_1.default)();
@@ -15,6 +16,7 @@ app.use(express_1.default.json());
 app.use("/post", postRoute_1.default);
 app.use("/comment", commentRoute_1.default);
 app.use("/auth", authRoute_1.default);
+app.use("/user", userRoute_1.default);
 const initApp = () => {
     const pr = new Promise((resolve, reject) => {
         const dbUrl = process.env.DATABASE_URL;

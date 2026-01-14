@@ -3,6 +3,8 @@ import mongoose from "mongoose";
 import postRoute from "./routes/postRoute";
 import commentRoute from "./routes/commentRoute";
 import authRoute from "./routes/authRoute";
+import userRoute from "./routes/userRoute";
+
 import dotenv from "dotenv";
 dotenv.config({path: '.env.dev'});
 
@@ -11,6 +13,7 @@ app.use(express.json());
 app.use("/post", postRoute);
 app.use("/comment", commentRoute);
 app.use("/auth", authRoute);
+app.use("/user", userRoute);
 
 
 const initApp = () => {
