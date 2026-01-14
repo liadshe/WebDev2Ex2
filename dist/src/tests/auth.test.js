@@ -110,5 +110,19 @@ describe('Auth API', () => {
             .send({ refreshToken: newRefreshToken });
         expect(reusedNew.status).toBe(401);
     }));
+    test("Logout invalidates refresh token", () => __awaiter(void 0, void 0, void 0, function* () {
+        // create a fresh user just for this test
+        const refreshToken = testUtils_1.userData.refreshToken;
+        // logout
+        const logout = yield (0, supertest_1.default)(app)
+            .post("/auth/logout")
+            .send({ refreshToken });
+        expect(logout.status).toBe(200);
+        // try to use the refresh token after logout
+        const refreshAttempt = yield (0, supertest_1.default)(app)
+            .post("/auth/refresh-token")
+            .send({ refreshToken });
+        expect(refreshAttempt.status).toBe(401);
+    }));
 });
 //# sourceMappingURL=auth.test.js.map

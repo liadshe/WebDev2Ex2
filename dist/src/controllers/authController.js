@@ -78,6 +78,26 @@ const login = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
         return sendError(res, "Error logging in user: " + error);
     }
 });
+const logout = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    const { refreshToken } = req.body;
+    if (!refreshToken) {
+        return sendError(res, "Refresh token is required");
+    }
+    try {
+        const user = yield userModel_1.default.findOneAndUpdate({
+            refreshTokens: refreshToken
+        }, {
+            $pull: { refreshTokens: refreshToken }
+        }, { new: true });
+        if (!user) {
+            return sendError(res, "Invalid refresh token", 401);
+        }
+        res.status(200).json({ message: "Logged out successfully" });
+    }
+    catch (error) {
+        return sendError(res, "Error logging out: " + error, 401);
+    }
+});
 const refreshToken = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const { refreshToken } = req.body;
     if (!refreshToken) {
@@ -105,5 +125,5 @@ const refreshToken = (req, res) => __awaiter(void 0, void 0, void 0, function* (
         return sendError(res, "Error refreshing token: " + error, 401);
     }
 });
-exports.default = { register, login, refreshToken };
+exports.default = { register, login, refreshToken, logout };
 //# sourceMappingURL=authController.js.map

@@ -89,6 +89,30 @@ const login = async (req: Request, res: Response) => {
     }
 };
 
+const logout = async (req: Request, res: Response) => {
+    const { refreshToken } = req.body;
+    if (!refreshToken) {
+        return sendError(res, "Refresh token is required");
+    }   
+    try {
+        const user = await User.findOneAndUpdate(
+            {
+                refreshTokens: refreshToken     
+            },
+            {
+                $pull: { refreshTokens: refreshToken }
+            },
+            { new: true }
+        );  
+        if (!user) {
+            return sendError(res, "Invalid refresh token", 401);
+        }
+        res.status(200).json({ message: "Logged out successfully" });
+    } catch (error) {
+        return sendError(res, "Error logging out: " + error, 401);
+    }
+};
+
 const refreshToken = async (req: Request, res: Response) => {
     const { refreshToken } = req.body;
     if (!refreshToken) {
@@ -129,4 +153,4 @@ const refreshToken = async (req: Request, res: Response) => {
 
 };
 
-export default { register, login, refreshToken }
+export default { register, login, refreshToken, logout }
