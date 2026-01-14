@@ -29,13 +29,13 @@ exports.postData = [
 ];
 exports.commentData = [
     {
-        postId: "1111", message: "comment1", sender: "sender1",
+        message: "comment1",
     },
     {
-        postId: "2222", message: "comment2", sender: "sender2",
+        message: "comment2",
     },
     {
-        postId: "3333", message: "comment3", sender: "sender3",
+        message: "comment3",
     }
 ];
 const registerUserTest = (app) => __awaiter(void 0, void 0, void 0, function* () {
