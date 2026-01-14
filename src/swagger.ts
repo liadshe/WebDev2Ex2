@@ -3,7 +3,7 @@ const swaggerSpec = {
   info: {
     title: "WebDev2Ex2 API",
     version: "1.0.0",
-    description: "API documentation for the WebDev2Ex2 project (posts, comments, users, auth).",
+    description: "Full API documentation including Auth, Users, Posts, and Comments.",
   },
   servers: [
     { url: "http://localhost:3000", description: "Local server" }
@@ -23,78 +23,105 @@ const swaggerSpec = {
           _id: { type: "string" },
           username: { type: "string" },
           email: { type: "string", format: "email" },
-          createdAt: { type: "string", format: "date-time" }
         }
       },
       Post: {
         type: "object",
         properties: {
-          _id: { type: "string" },
           title: { type: "string" },
           content: { type: "string" },
-          author: { $ref: "#/components/schemas/User" },
-          createdAt: { type: "string", format: "date-time" }
-        }
+          createdBy: { type: "string", description: "User ID" }
+        },
+        required: ["title", "content"]
       },
       Comment: {
         type: "object",
         properties: {
-          _id: { type: "string" },
+          message: { type: "string" },
           postId: { type: "string" },
-          author: { $ref: "#/components/schemas/User" },
-          content: { type: "string" },
-          createdAt: { type: "string", format: "date-time" }
-        }
-      },
-      AuthRequest: {
-        type: "object",
-        properties: {
-          username: { type: "string" },
-          password: { type: "string" }
+          createdBy: { type: "string" }
         },
-        required: ["username","password"]
-      },
-      AuthResponse: {
-        type: "object",
-        properties: {
-          token: { type: "string" },
-          user: { $ref: "#/components/schemas/User" }
-        }
+        required: ["message"]
       }
     }
   },
   paths: {
-    "/post": {
-      get: {
-        summary: "List posts",
-        responses: { "200": { description: "OK", content: { "application/json": { schema: { type: "array", items: { $ref: "#/components/schemas/Post" } } } } } }
-      },
+    // --- AUTH SECTION ---
+    "/auth/register": {
       post: {
-        summary: "Create post",
-        requestBody: { content: { "application/json": { schema: { $ref: "#/components/schemas/Post" } } } },
-        responses: { "201": { description: "Created", content: { "application/json": { schema: { $ref: "#/components/schemas/Post" } } } } },
-        security: [{ bearerAuth: [] }]
+        tags: ["Auth"],
+        summary: "Register a new user",
+        requestBody: { content: { "application/json": { schema: { type: "object", properties: { username: { type: "string" }, email: { type: "string" }, password: { type: "string" } } } } } },
+        responses: { "201": { description: "User registered" } }
       }
+    },
+    "/auth/login": {
+      post: {
+        tags: ["Auth"],
+        summary: "Login",
+        requestBody: { content: { "application/json": { schema: { type: "object", properties: { email: { type: "string" }, password: { type: "string" } } } } } },
+        responses: { "200": { description: "Returns Access and Refresh tokens" } }
+      }
+    },
+    "/auth/refresh-token": {
+      post: {
+        tags: ["Auth"],
+        summary: "Refresh access token",
+        responses: { "200": { description: "New tokens generated" } }
+      }
+    },
+    "/auth/logout": {
+      post: {
+        tags: ["Auth"],
+        summary: "Logout user",
+        responses: { "200": { description: "Logged out" } }
+      }
+    },
+
+    // --- USER SECTION ---
+    "/user": {
+      get: {
+        tags: ["Users"],
+        summary: "Get all users",
+        responses: { "200": { description: "OK" } }
+      }
+    },
+    "/user/{id}": {
+      parameters: [{ name: "id", in: "path", required: true, schema: { type: "string" } }],
+      get: { tags: ["Users"], summary: "Get user by ID", responses: { "200": { description: "OK" } } },
+      put: { tags: ["Users"], summary: "Update user", security: [{ bearerAuth: [] }], responses: { "200": { description: "Updated" } } },
+      delete: { tags: ["Users"], summary: "Delete user", security: [{ bearerAuth: [] }], responses: { "204": { description: "Deleted" } } }
+    },
+
+    // --- POST SECTION ---
+    "/post": {
+      get: { tags: ["Posts"], summary: "Get all posts", responses: { "200": { description: "OK" } } },
+      post: { tags: ["Posts"], summary: "Create post", security: [{ bearerAuth: [] }], requestBody: { content: { "application/json": { schema: { $ref: "#/components/schemas/Post" } } } }, responses: { "201": { description: "Created" } } }
     },
     "/post/{id}": {
       parameters: [{ name: "id", in: "path", required: true, schema: { type: "string" } }],
-      get: { summary: "Get post by id", responses: { "200": { description: "OK", content: { "application/json": { schema: { $ref: "#/components/schemas/Post" } } } } } },
-      put: { summary: "Update post", requestBody: { content: { "application/json": { schema: { $ref: "#/components/schemas/Post" } } } }, responses: { "200": { description: "OK" } }, security: [{ bearerAuth: [] }] },
-      delete: { summary: "Delete post", responses: { "204": { description: "No Content" } }, security: [{ bearerAuth: [] }] }
+      get: { tags: ["Posts"], summary: "Get post by ID", responses: { "200": { description: "OK" } } },
+      put: { tags: ["Posts"], summary: "Update post", security: [{ bearerAuth: [] }], responses: { "200": { description: "Updated" } } },
+      delete: { tags: ["Posts"], summary: "Delete post", security: [{ bearerAuth: [] }], responses: { "204": { description: "Deleted" } } }
     },
+    "/post/{id}/comments": {
+      parameters: [{ name: "id", in: "path", required: true, schema: { type: "string" } }],
+      get: { tags: ["Posts"], summary: "Get all comments for a specific post", responses: { "200": { description: "OK" } } }
+    },
+    "/post/{id}/comment": {
+      parameters: [{ name: "id", in: "path", required: true, schema: { type: "string" } }],
+      post: { tags: ["Posts"], summary: "Add a comment to a post", security: [{ bearerAuth: [] }], requestBody: { content: { "application/json": { schema: { type: "object", properties: { message: { type: "string" } } } } } }, responses: { "201": { description: "Comment added" } } }
+    },
+
+    // --- COMMENT SECTION ---
     "/comment": {
-      get: { summary: "List comments", responses: { "200": { description: "OK", content: { "application/json": { schema: { type: "array", items: { $ref: "#/components/schemas/Comment" } } } } } } },
-      post: { summary: "Create comment", requestBody: { content: { "application/json": { schema: { $ref: "#/components/schemas/Comment" } } } }, responses: { "201": { description: "Created" } }, security: [{ bearerAuth: [] }] }
+      get: { tags: ["Comments"], summary: "List all comments", responses: { "200": { description: "OK" } } }
     },
-    "/user": {
-      get: { summary: "List users", responses: { "200": { description: "OK", content: { "application/json": { schema: { type: "array", items: { $ref: "#/components/schemas/User" } } } } } } },
-      post: { summary: "Create user", requestBody: { content: { "application/json": { schema: { $ref: "#/components/schemas/User" } } } }, responses: { "201": { description: "Created" } } }
-    },
-    "/auth/register": {
-      post: { summary: "Register", requestBody: { content: { "application/json": { schema: { $ref: "#/components/schemas/AuthRequest" } } } }, responses: { "201": { description: "Created", content: { "application/json": { schema: { $ref: "#/components/schemas/AuthResponse" } } } } } }
-    },
-    "/auth/login": {
-      post: { summary: "Login", requestBody: { content: { "application/json": { schema: { $ref: "#/components/schemas/AuthRequest" } } } }, responses: { "200": { description: "OK", content: { "application/json": { schema: { $ref: "#/components/schemas/AuthResponse" } } } } } }
+    "/comment/{id}": {
+      parameters: [{ name: "id", in: "path", required: true, schema: { type: "string" } }],
+      get: { tags: ["Comments"], summary: "Get comment by ID", responses: { "200": { description: "OK" } } },
+      put: { tags: ["Comments"], summary: "Update comment", security: [{ bearerAuth: [] }], responses: { "200": { description: "Updated" } } },
+      delete: { tags: ["Comments"], summary: "Delete comment", security: [{ bearerAuth: [] }], responses: { "204": { description: "Deleted" } } }
     }
   }
 };
