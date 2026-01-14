@@ -11,6 +11,7 @@ type user = {
 };
 
 export const userData:user = {email: "test@example.com", password: "testpassword"};
+export const usersData:user[] = [{email: "test1@example.com", password: "testpassword"}, {email: "test2@example.com", password: "testpassword"}];
 
 type post = {
     title: string;

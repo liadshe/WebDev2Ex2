@@ -12,10 +12,11 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.registerUserTest = exports.commentData = exports.postData = exports.userData = void 0;
+exports.registerUserTest = exports.commentData = exports.postData = exports.usersData = exports.userData = void 0;
 const supertest_1 = __importDefault(require("supertest"));
 const userModel_1 = __importDefault(require("../models/userModel"));
 exports.userData = { email: "test@example.com", password: "testpassword" };
+exports.usersData = [{ email: "test1@example.com", password: "testpassword" }, { email: "test2@example.com", password: "testpassword" }];
 exports.postData = [
     {
         title: "post1", content: "hello post1",
