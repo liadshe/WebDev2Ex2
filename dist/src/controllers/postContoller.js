@@ -15,6 +15,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 /* eslint-disable @typescript-eslint/no-explicit-any */
 const postModel_1 = __importDefault(require("../models/postModel"));
 const baseController_1 = __importDefault(require("./baseController"));
+const commentModel_1 = __importDefault(require("../models/commentModel"));
 class PostController extends baseController_1.default {
     constructor() {
         super(postModel_1.default);
@@ -66,6 +67,8 @@ class PostController extends baseController_1.default {
                 res.status(403).json({ message: "Forbidden: You can only delete your own posts" });
                 return;
             }
+            // delete comments related to the post
+            yield commentModel_1.default.deleteMany({ postId: postId });
             return _super.del.call(this, req, res);
             ;
         });

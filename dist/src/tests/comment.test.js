@@ -54,6 +54,10 @@ describe('Comments API', () => {
             expect(response.body.message).toBe(comment.message);
             expect(response.body.postId).toBe(comment.postId);
             expect(response.body.createdBy).toBeDefined();
+            // test that comment is added to post's comments array
+            const postResponse = yield (0, supertest_1.default)(app).get('/post/' + testUtils_1.postData[0]._id);
+            expect(postResponse.statusCode).toBe(200);
+            expect(postResponse.body.comments).toContainEqual(response.body._id);
         }
         ;
     }));
@@ -94,6 +98,10 @@ describe('Comments API', () => {
             .delete('/comment/' + testUtils_1.commentData[0]._id)
             .set("Authorization", "Bearer " + testUtils_1.userData.token);
         expect(response.statusCode).toBe(200);
+        // test that comment is removed from post's comments array
+        const postResponse = yield (0, supertest_1.default)(app).get('/post/' + testUtils_1.commentData[0].postId);
+        expect(postResponse.statusCode).toBe(200);
+        expect(postResponse.body.comments).not.toContainEqual(testUtils_1.commentData[0]._id);
         const getResponse = yield (0, supertest_1.default)(app).get('/comment/' + testUtils_1.commentData[0]._id);
         expect(getResponse.statusCode).toBe(404);
     }));

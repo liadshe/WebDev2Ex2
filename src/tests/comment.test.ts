@@ -51,6 +51,12 @@ describe('Comments API', () => {
         expect(response.body.message).toBe(comment.message);
         expect(response.body.postId).toBe(comment.postId);
         expect(response.body.createdBy).toBeDefined();
+
+
+        // test that comment is added to post's comments array
+        const postResponse = await request(app).get('/post/' + postData[0]._id);
+        expect(postResponse.statusCode).toBe(200);
+        expect(postResponse.body.comments).toContainEqual(response.body._id);
        };
     }) ;
 
@@ -96,7 +102,11 @@ describe('Comments API', () => {
             .delete('/comment/' + commentData[0]._id)
             .set("Authorization", "Bearer " + userData.token);
         expect(response.statusCode).toBe(200);
-
+        // test that comment is removed from post's comments array
+        const postResponse = await request(app).get('/post/' + commentData[0].postId);
+        expect(postResponse.statusCode).toBe(200);
+        expect(postResponse.body.comments).not.toContainEqual(commentData[0]._id);
+        
         const getResponse = await request(app).get('/comment/' + commentData[0]._id);
         expect(getResponse.statusCode).toBe(404);
     });

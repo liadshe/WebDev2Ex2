@@ -66,12 +66,27 @@ describe('Posts API', () => {
 
     // delete post by id   
     test('DELETE post by ID', async () => {
+
+        // add comment to post to test cascade delete
+        const commentResponse = await request(app)
+            .post('/post/' + postData[0]._id + '/comment')
+            .set("Authorization", "Bearer " + userData.token)
+            .send({ message: "Comment to be deleted with post" });
+        expect(commentResponse.statusCode).toBe(201);
+        expect(commentResponse.body.message).toBe("Comment to be deleted with post");
+        expect(commentResponse.body.postId).toBe(postData[0]._id);
+        expect(commentResponse.body.createdBy).toBeDefined();
+
+        // delete post
         const response = await request(app)
             .delete('/post/' + postData[0]._id).set("Authorization", `Bearer ${userData.token}`);
         expect(response.statusCode).toBe(200);
 
         const getResponse = await request(app).get('/post/' + postData[0]._id);
         expect(getResponse.statusCode).toBe(404);
+        const commentGetResponse = await request(app).get('/comment/' + commentResponse.body._id);
+        expect(commentGetResponse.statusCode).toBe(404);
+        
     });
 
 });

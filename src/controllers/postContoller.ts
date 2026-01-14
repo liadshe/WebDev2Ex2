@@ -3,6 +3,7 @@ import postModel from "../models/postModel";
 import baseController from "./baseController";
 import { Response } from "express";
 import { AuthRequest } from "../middleware/authMiddleware";
+import commentModel from "../models/commentModel";
 
 class PostController extends baseController {
     constructor() {
@@ -40,6 +41,9 @@ class PostController extends baseController {
               res.status(403).json({ message: "Forbidden: You can only delete your own posts" });
                 return;
         }
+
+        // delete comments related to the post
+        await commentModel.deleteMany({ postId: postId });
         return super.del(req, res);;
     }
 }

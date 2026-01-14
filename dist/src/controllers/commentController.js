@@ -13,6 +13,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const commentModel_1 = __importDefault(require("../models/commentModel"));
+const postModel_1 = __importDefault(require("../models/postModel"));
 const baseController_1 = __importDefault(require("./baseController"));
 class commentController extends baseController_1.default {
     constructor() {
@@ -29,7 +30,22 @@ class commentController extends baseController_1.default {
             obj.createdBy = userId;
             const postId = req.body.postId ? req.body.postId : req.params.id;
             obj.postId = postId;
-            return _super.create.call(this, req, res);
+            // create comment
+            yield _super.create.call(this, req, res);
+            // get created comment
+            const createdComment = yield commentModel_1.default.findOne({ createdBy: userId, postId: postId, content: obj.content }).sort({ createdAt: -1 });
+            if (!createdComment) {
+                return;
+            }
+            obj._id = createdComment._id;
+            // add comment to post's comments array
+            const post = yield postModel_1.default.findById(postId);
+            if (!post) {
+                return;
+            }
+            post.comments.push(obj._id);
+            yield post.save();
+            return;
         });
     }
     getByPostId(req, res) {
@@ -73,6 +89,12 @@ class commentController extends baseController_1.default {
             if (comment.createdBy.toString() !== userId) {
                 res.status(403).json({ message: "Forbidden: You can only delete your own comments" });
                 return;
+            }
+            // remove comment from post's comments array
+            const post = yield postModel_1.default.findById(comment.postId);
+            if (post) {
+                post.comments = post.comments.filter((id) => id.toString() !== commentId);
+                yield post.save();
             }
             return _super.del.call(this, req, res);
             ;
