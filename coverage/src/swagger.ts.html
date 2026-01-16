@@ -3,15 +3,15 @@
 <html lang="en">
 
 <head>
-    <title>Code coverage report for src/routes/authRoute.ts</title>
+    <title>Code coverage report for src/swagger.ts</title>
     <meta charset="utf-8" />
-    <link rel="stylesheet" href="../../prettify.css" />
-    <link rel="stylesheet" href="../../base.css" />
-    <link rel="shortcut icon" type="image/x-icon" href="../../favicon.png" />
+    <link rel="stylesheet" href="../prettify.css" />
+    <link rel="stylesheet" href="../base.css" />
+    <link rel="shortcut icon" type="image/x-icon" href="../favicon.png" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <style type='text/css'>
         .coverage-summary .sorter {
-            background-image: url(../../sort-arrow-sprite.png);
+            background-image: url(../sort-arrow-sprite.png);
         }
     </style>
 </head>
@@ -19,13 +19,13 @@
 <body>
 <div class='wrapper'>
     <div class='pad1'>
-        <h1><a href="../../index.html">All files</a> / <a href="index.html">src/routes</a> authRoute.ts</h1>
+        <h1><a href="../index.html">All files</a> / <a href="index.html">src</a> swagger.ts</h1>
         <div class='clearfix'>
             
             <div class='fl pad1y space-right2'>
                 <span class="strong">100% </span>
                 <span class="quiet">Statements</span>
-                <span class='fraction'>8/8</span>
+                <span class='fraction'>2/2</span>
             </div>
         
             
@@ -46,7 +46,7 @@
             <div class='fl pad1y space-right2'>
                 <span class="strong">100% </span>
                 <span class="quiet">Lines</span>
-                <span class='fraction'>8/8</span>
+                <span class='fraction'>2/2</span>
             </div>
         
             
@@ -191,23 +191,7 @@
 <a name='L126'></a><a href='#L126'>126</a>
 <a name='L127'></a><a href='#L127'>127</a>
 <a name='L128'></a><a href='#L128'>128</a>
-<a name='L129'></a><a href='#L129'>129</a>
-<a name='L130'></a><a href='#L130'>130</a>
-<a name='L131'></a><a href='#L131'>131</a>
-<a name='L132'></a><a href='#L132'>132</a>
-<a name='L133'></a><a href='#L133'>133</a>
-<a name='L134'></a><a href='#L134'>134</a>
-<a name='L135'></a><a href='#L135'>135</a>
-<a name='L136'></a><a href='#L136'>136</a>
-<a name='L137'></a><a href='#L137'>137</a>
-<a name='L138'></a><a href='#L138'>138</a>
-<a name='L139'></a><a href='#L139'>139</a>
-<a name='L140'></a><a href='#L140'>140</a>
-<a name='L141'></a><a href='#L141'>141</a>
-<a name='L142'></a><a href='#L142'>142</a>
-<a name='L143'></a><a href='#L143'>143</a></td><td class="line-coverage quiet"><span class="cline-any cline-yes">4x</span>
-<span class="cline-any cline-yes">4x</span>
-<span class="cline-any cline-yes">4x</span>
+<a name='L129'></a><a href='#L129'>129</a></td><td class="line-coverage quiet"><span class="cline-any cline-yes">4x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -335,177 +319,151 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">4x</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">4x</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">4x</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">4x</span>
-<span class="cline-any cline-yes">4x</span></td><td class="text"><pre class="prettyprint lang-js">import express from "express";
-const router = express.Router();
-import authController from "../controllers/authController";
+<span class="cline-any cline-yes">4x</span></td><td class="text"><pre class="prettyprint lang-js">const swaggerSpec = {
+  openapi: "3.0.0",
+  info: {
+    title: "WebDev2Ex2 API",
+    version: "1.0.0",
+    description: "Full API documentation including Auth, Users, Posts, and Comments.",
+  },
+  servers: [
+    { url: "http://localhost:3000", description: "Local server" }
+  ],
+  components: {
+    securitySchemes: {
+      bearerAuth: {
+        type: "http",
+        scheme: "bearer",
+        bearerFormat: "JWT"
+      }
+    },
+    schemas: {
+      User: {
+        type: "object",
+        properties: {
+          _id: { type: "string" },
+          username: { type: "string" },
+          email: { type: "string", format: "email" },
+        }
+      },
+      Post: {
+        type: "object",
+        properties: {
+          title: { type: "string" },
+          content: { type: "string" },
+          createdBy: { type: "string", description: "User ID" }
+        },
+        required: ["title", "content"]
+      },
+      Comment: {
+        type: "object",
+        properties: {
+          message: { type: "string" },
+          postId: { type: "string" },
+          createdBy: { type: "string" }
+        },
+        required: ["message"]
+      }
+    }
+  },
+  paths: {
+    // --- AUTH SECTION ---
+    "/auth/register": {
+      post: {
+        tags: ["Auth"],
+        summary: "Register a new user",
+        requestBody: { content: { "application/json": { schema: { type: "object", properties: { username: { type: "string" }, email: { type: "string" }, password: { type: "string" } } } } } },
+        responses: { "201": { description: "User registered" } }
+      }
+    },
+    "/auth/login": {
+      post: {
+        tags: ["Auth"],
+        summary: "Login",
+        requestBody: { content: { "application/json": { schema: { type: "object", properties: { email: { type: "string" }, password: { type: "string" } } } } } },
+        responses: { "200": { description: "Returns Access and Refresh tokens" } }
+      }
+    },
+    "/auth/refresh-token": {
+      post: {
+        tags: ["Auth"],
+        summary: "Refresh access token",
+        responses: { "200": { description: "New tokens generated" } }
+      }
+    },
+    "/auth/logout": {
+      post: {
+        tags: ["Auth"],
+        summary: "Logout user",
+        responses: { "200": { description: "Logged out" } }
+      }
+    },
 &nbsp;
-/**
- * @swagger
- * tags:
- *   name: Auth
- *   description: Authentication endpoints
- */
+    // --- USER SECTION ---
+    "/user": {
+      get: {
+        tags: ["Users"],
+        summary: "Get all users",
+        responses: { "200": { description: "OK" } }
+      }
+    },
+    "/user/{id}": {
+      parameters: [{ name: "id", in: "path", required: true, schema: { type: "string" } }],
+      get: { tags: ["Users"], summary: "Get user by ID", responses: { "200": { description: "OK" } } },
+      put: { tags: ["Users"], summary: "Update user", security: [{ bearerAuth: [] }], responses: { "200": { description: "Updated" } } },
+      delete: { tags: ["Users"], summary: "Delete user", security: [{ bearerAuth: [] }], responses: { "204": { description: "Deleted" } } }
+    },
 &nbsp;
-/**
- * @swagger
- * /auth/register:
- *   post:
- *     summary: Register a new user
- *     tags: [Auth]
- *     requestBody:
- *       required: true
- *       content:
- *         application/json:
- *           schema:
- *             type: object
- *             required:
- *               - email
- *               - password
- *             properties:
- *               email:
- *                 type: string
- *                 example: test@example.com
- *               password:
- *                 type: string
- *                 example: "123456"
- *     responses:
- *       201:
- *         description: User created successfully
- *         content:
- *           application/json:
- *             schema:
- *               $ref: '#/components/schemas/User'
- *       400:
- *         description: Bad request
- */
+    // --- POST SECTION ---
+    "/post": {
+      get: { tags: ["Posts"], summary: "Get all posts", responses: { "200": { description: "OK" } } },
+      post: { tags: ["Posts"], summary: "Create post", security: [{ bearerAuth: [] }], requestBody: { content: { "application/json": { schema: { $ref: "#/components/schemas/Post" } } } }, responses: { "201": { description: "Created" } } }
+    },
+    "/post/{id}": {
+      parameters: [{ name: "id", in: "path", required: true, schema: { type: "string" } }],
+      get: { tags: ["Posts"], summary: "Get post by ID", responses: { "200": { description: "OK" } } },
+      put: { tags: ["Posts"], summary: "Update post", security: [{ bearerAuth: [] }], responses: { "200": { description: "Updated" } } },
+      delete: { tags: ["Posts"], summary: "Delete post", security: [{ bearerAuth: [] }], responses: { "204": { description: "Deleted" } } }
+    },
+    "/post/{id}/comments": {
+      parameters: [{ name: "id", in: "path", required: true, schema: { type: "string" } }],
+      get: { tags: ["Posts"], summary: "Get all comments for a specific post", responses: { "200": { description: "OK" } } }
+    },
+    "/post/{id}/comment": {
+      parameters: [{ name: "id", in: "path", required: true, schema: { type: "string" } }],
+      post: { tags: ["Posts"], summary: "Add a comment to a post", security: [{ bearerAuth: [] }], requestBody: { content: { "application/json": { schema: { type: "object", properties: { message: { type: "string" } } } } } }, responses: { "201": { description: "Comment added" } } }
+    },
 &nbsp;
-/**
- * @swagger
- * /auth/login:
- *   post:
- *     summary: Login user
- *     tags: [Auth]
- *     requestBody:
- *       required: true
- *       content:
- *         application/json:
- *           schema:
- *             type: object
- *             required:
- *               - email
- *               - password
- *             properties:
- *               email:
- *                 type: string
- *                 example: test@example.com
- *               password:
- *                 type: string
- *                 example: "123456"
- *     responses:
- *       200:
- *         description: Login successful
- *         content:
- *           application/json:
- *             schema:
- *               type: object
- *               properties:
- *                 token:
- *                   type: string
- *                 refreshToken:
- *                   type: string
- *       401:
- *         description: Invalid credentials
- */
+    // --- COMMENT SECTION ---
+    "/comment": {
+      get: { tags: ["Comments"], summary: "List all comments", responses: { "200": { description: "OK" } } }
+    },
+    "/comment/{id}": {
+      parameters: [{ name: "id", in: "path", required: true, schema: { type: "string" } }],
+      get: { tags: ["Comments"], summary: "Get comment by ID", responses: { "200": { description: "OK" } } },
+      put: { tags: ["Comments"], summary: "Update comment", security: [{ bearerAuth: [] }], responses: { "200": { description: "Updated" } } },
+      delete: { tags: ["Comments"], summary: "Delete comment", security: [{ bearerAuth: [] }], responses: { "204": { description: "Deleted" } } }
+    }
+  }
+};
 &nbsp;
-/**
- * @swagger
- * /auth/refresh-token:
- *   post:
- *     summary: Refresh access token
- *     tags: [Auth]
- *     requestBody:
- *       required: true
- *       content:
- *         application/json:
- *           schema:
- *             type: object
- *             properties:
- *               refreshToken:
- *                 type: string
- *     responses:
- *       200:
- *         description: Token refreshed
- *         content:
- *           application/json:
- *             schema:
- *               type: object
- *               properties:
- *                 token:
- *                   type: string
- *                 refreshToken:
- *                   type: string
- *       401:
- *         description: Invalid refresh token
- */
-&nbsp;
-/**
- * @swagger
- * /auth/logout:
- *   post:
- *     summary: Logout user
- *     tags: [Auth]
- *     requestBody:
- *       required: true
- *       content:
- *         application/json:
- *           schema:
- *             type: object
- *             properties:
- *               refreshToken:
- *                 type: string
- *     responses:
- *       200:
- *         description: Logged out successfully
- *       401:
- *         description: Invalid refresh token
- */
-&nbsp;
-router.post("/register", authController.register);
-&nbsp;
-router.post("/login", authController.login);   
-&nbsp;
-router.post("/refresh-token", authController.refreshToken);
-&nbsp;
-router.post("/logout", authController.logout);
-export default router;</pre></td></tr></table></pre>
+export default swaggerSpec;</pre></td></tr></table></pre>
 
                 <div class='push'></div><!-- for sticky footer -->
             </div><!-- /wrapper -->
             <div class='footer quiet pad2 space-top1 center small'>
                 Code coverage generated by
                 <a href="https://istanbul.js.org/" target="_blank" rel="noopener noreferrer">istanbul</a>
-                at 2026-01-16T10:01:39.299Z
+                at 2026-01-16T10:01:39.349Z
             </div>
-        <script src="../../prettify.js"></script>
+        <script src="../prettify.js"></script>
         <script>
             window.onload = function () {
                 prettyPrint();
             };
         </script>
-        <script src="../../sorter.js"></script>
-        <script src="../../block-navigation.js"></script>
+        <script src="../sorter.js"></script>
+        <script src="../block-navigation.js"></script>
     </body>
 </html>
     
