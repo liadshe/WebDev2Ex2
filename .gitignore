@@ -1,4 +1,4 @@
 .env.dev
 .env.test
-
+coverage/
 node_modules/
