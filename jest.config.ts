@@ -4,4 +4,6 @@ export default {
  testEnvironment: "node",
  setupFiles: ["./jest.setup.ts"],
  roots: ["<rootDir>/src/tests/"],
+ coverageDirectory: "coverage",
+ coverageReporters: ["text", "lcov","html"],
 };
