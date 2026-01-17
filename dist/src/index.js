@@ -15,11 +15,26 @@ const dotenv_1 = __importDefault(require("dotenv"));
 dotenv_1.default.config({ path: '.env.dev' });
 const app = (0, express_1.default)();
 app.use(express_1.default.json());
+app.use(express_1.default.static('public'));
 app.use("/post", postRoute_1.default);
 app.use("/comment", commentRoute_1.default);
 app.use("/auth", authRoute_1.default);
 app.use("/user", userRoute_1.default);
-app.use("/api-docs", swagger_ui_express_1.default.serve, swagger_ui_express_1.default.setup(swagger_1.default));
+app.use("/api-docs", swagger_ui_express_1.default.serve, swagger_ui_express_1.default.setup(swagger_1.default, {
+    customCss: `
+      #swagger-ui > .swagger-ui:first-child:before {
+    content: "";
+    display: block;
+    margin: 12px auto;
+    width: 80px;               
+    height: 80px;              
+    background-image: url('/noaLiadAv.png');
+    background-size: contain;
+    background-repeat: no-repeat;
+    background-position: center;
+  }
+    `,
+}));
 const initApp = () => {
     const pr = new Promise((resolve, reject) => {
         const dbUrl = process.env.DATABASE_URL;

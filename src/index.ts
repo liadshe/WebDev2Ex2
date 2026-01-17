@@ -13,11 +13,31 @@ dotenv.config({path: '.env.dev'});
 
 const app = express();
 app.use(express.json());
+app.use(express.static('public'));
 app.use("/post", postRoute);
 app.use("/comment", commentRoute);
 app.use("/auth", authRoute);
 app.use("/user", userRoute);
-app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerSpec));
+app.use(
+  "/api-docs",
+  swaggerUi.serve,
+  swaggerUi.setup(swaggerSpec, {
+    customCss: `
+      #swagger-ui > .swagger-ui:first-child:before {
+    content: "";
+    display: block;
+    margin: 12px auto;
+    width: 80px;               
+    height: 80px;              
+    background-image: url('/noaLiadAv.png');
+    background-size: contain;
+    background-repeat: no-repeat;
+    background-position: center;
+  }
+    `,
+  })
+);
+
 
 const initApp = () => {
   const pr = new Promise<Express>((resolve, reject) => {
